@@ -1,0 +1,340 @@
+.section {
+  padding: var(--section-py) 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 62px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.sub {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 460px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ── Widget ────────────────────────────────────────────────────── */
+.widget {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  min-height: 540px;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.4);
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+}
+
+.pane:first-child {
+  border-right: 1px solid var(--border);
+}
+
+.paneHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(8, 8, 16, 0.6);
+  flex-shrink: 0;
+}
+
+.paneLabel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+}
+
+.badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--accent-secondary);
+  letter-spacing: 0.12em;
+  border: 1px solid rgba(226, 255, 61, 0.3);
+  border-radius: 3px;
+  padding: 2px 7px;
+}
+
+.trafficLights {
+  display: flex;
+  gap: 7px;
+}
+
+.trafficLights span {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.trafficLights span:nth-child(1) {
+  background: rgba(255, 95, 86, 0.4);
+}
+
+.trafficLights span:nth-child(2) {
+  background: rgba(255, 189, 46, 0.4);
+}
+
+.trafficLights span:nth-child(3) {
+  background: rgba(39, 201, 63, 0.4);
+}
+
+/* ── Editor ────────────────────────────────────────────────────── */
+.editor {
+  flex: 1;
+  background: #04040C;
+  color: #B0B0C8;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.75;
+  padding: 28px 28px;
+  border: none;
+  outline: none;
+  resize: none;
+  min-height: 480px;
+  caret-color: var(--accent);
+  tab-size: 2;
+}
+
+.editor::selection {
+  background: rgba(124, 111, 255, 0.25);
+}
+
+/* ── PDF Preview ───────────────────────────────────────────────── */
+.pdfWrapper {
+  flex: 1;
+  background: #12122A;
+  padding: 28px;
+  overflow-y: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.pdfPage {
+  background: #FAFAFA;
+  color: #1A1A2E;
+  padding: 52px 56px;
+  width: 100%;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.35),
+    0 1px 3px rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 13.5px;
+  line-height: 1.7;
+  min-height: 400px;
+}
+
+/* PDF page typography */
+.pdfPage :global(h1) {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1.5px solid #E5E7EB;
+  line-height: 1.3;
+}
+
+.pdfPage :global(h2) {
+  font-family: Georgia, serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1F2937;
+  margin-top: 24px;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.pdfPage :global(h3) {
+  font-family: Georgia, serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+
+.pdfPage :global(p) {
+  color: #374151;
+  margin-bottom: 10px;
+}
+
+.pdfPage :global(li) {
+  margin-left: 22px;
+  margin-bottom: 5px;
+  list-style: disc;
+  color: #374151;
+}
+
+.pdfPage :global(pre) {
+  background: #F3F4F6;
+  border: 1px solid #E5E7EB;
+  border-left: 3px solid #7C6FFF;
+  border-radius: 4px;
+  padding: 14px 18px;
+  margin: 14px 0;
+  overflow-x: auto;
+  font-size: 12px;
+}
+
+.pdfPage :global(code) {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  background: #F3F4F6;
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: #5B21B6;
+}
+
+.pdfPage :global(pre code) {
+  background: none;
+  padding: 0;
+  color: #374151;
+}
+
+.pdfPage :global(strong) { font-weight: 700; }
+.pdfPage :global(em) { font-style: italic; }
+
+.pdfPage :global(table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  font-size: 12.5px;
+}
+
+.pdfPage :global(th) {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 700;
+  color: #111827;
+}
+
+.pdfPage :global(td) {
+  border: 1px solid #E5E7EB;
+  padding: 7px 12px;
+  color: #374151;
+}
+
+.pdfPage :global(tr:nth-child(even) td) {
+  background: #F9FAFB;
+}
+
+.pdfPage :global(.spacer) {
+  height: 8px;
+}
+
+/* ── Download bar ──────────────────────────────────────────────── */
+.downloadBar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  background: rgba(8, 8, 16, 0.55);
+  flex-shrink: 0;
+}
+
+.downloadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 22px;
+  background: var(--accent);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: none;
+  transition:
+    background 250ms ease,
+    box-shadow 250ms ease,
+    opacity 200ms ease;
+}
+
+.downloadBtn:hover:not(:disabled) {
+  background: #9184ff;
+  box-shadow: 0 0 0 1px var(--accent), 0 6px 24px var(--accent-glow-strong);
+}
+
+.downloadBtn:disabled {
+  opacity: 0.6;
+}
+
+.downloadBtn.loading {
+  pointer-events: none;
+}
+
+.spinner {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.errorMsg {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #ff6b6b;
+  flex: 1;
+}
+
+/* ── Mobile ────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .widget {
+    grid-template-columns: 1fr;
+  }
+
+  .pane:first-child {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .editor {
+    min-height: 280px;
+  }
+}
