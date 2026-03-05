@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useActionState } from 'react'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import styles from './Demo.module.css'
 
@@ -131,20 +131,12 @@ function parseMarkdown(md) {
 
 export default function Demo() {
   const [markdown, setMarkdown] = useState(DEFAULT_MARKDOWN)
-  const [loading,  setLoading]  = useState(false)
-  const [error,    setError]    = useState(null)
   const titleRef  = useScrollReveal()
   const widgetRef = useScrollReveal()
 
-  const handleChange = useCallback((e) => {
-    setMarkdown(e.target.value)
-    setError(null)
-  }, [])
+  const handleChange = (e) => setMarkdown(e.target.value)
 
-  const handleDownload = useCallback(async () => {
-    if (loading) return
-    setLoading(true)
-    setError(null)
+  const [error, handleDownload, loading] = useActionState(async () => {
     try {
       const res = await fetch(`${API}/convert`, {
         method: 'POST',
@@ -153,7 +145,7 @@ export default function Demo() {
       })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
-        throw new Error(body.error || `Server error ${res.status}`)
+        return body.error || `Server error ${res.status}`
       }
       const blob = await res.blob()
       const url  = URL.createObjectURL(blob)
@@ -164,12 +156,11 @@ export default function Demo() {
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
+      return null
     } catch (e) {
-      setError(e.message)
-    } finally {
-      setLoading(false)
+      return e.message
     }
-  }, [markdown, loading])
+  }, null)
 
   const htmlOutput = parseMarkdown(markdown)
 
