@@ -10,10 +10,10 @@ MarkPDF is a full-stack application with a React landing page and a Node.js/Expr
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 18, Vite 6, CSS Modules |
-| Backend | Node.js, Express 4 |
+| Frontend | React 19, Vite 7, CSS Modules |
+| Backend | Node.js, Express 5 |
 | PDF Engine | Puppeteer 24 (headless Chrome) |
-| Markdown Parser | Marked 15 |
+| Markdown Parser | Marked 17 |
 | Security | Helmet, express-rate-limit, sanitize-html |
 
 ## Getting Started
