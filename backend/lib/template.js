@@ -27,7 +27,7 @@ function buildTemplate(contentHtml, { title = 'Document' } = {}) {
           <rect x="5" y="16" width="16" height="1.5" rx="0.75" fill="#9d9ab0"/>
           <rect x="5" y="20" width="10" height="1.5" rx="0.75" fill="#c4c1d4"/>
         </svg>
-        <span style="font-family:'Courier New',monospace;font-size:9pt;color:#9d9ab0;letter-spacing:0.1em;text-transform:uppercase;">MarkPDF</span>
+        <span style="font-family:'Courier New',monospace;font-size:9pt;color:#9d9ab0;letter-spacing:0.1em;text-transform:uppercase;">Mark2PDF</span>
       </div>
       <span style="font-family:'Courier New',monospace;font-size:9pt;color:#c4c1d4;">${dateStr}</span>
     </div>`
@@ -174,6 +174,58 @@ function buildTemplate(contentHtml, { title = 'Document' } = {}) {
       padding: 0;
       font-size: 9pt;
       white-space: pre;
+    }
+
+    .tex-math-inline {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 9pt;
+      color: #2b2760;
+      background: #f4f2ff;
+      padding: 1pt 4pt;
+      border-radius: 3px;
+    }
+
+    .tex-math-display {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 9.5pt;
+      color: #2b2760;
+      background: #f7f6ff;
+      border: 1px solid #e4e1f5;
+      border-left: 3px solid #7C6FFF;
+      border-radius: 4px;
+      padding: 10pt 12pt;
+      margin: 12pt 0;
+      white-space: pre-wrap;
+    }
+
+    .tex-center {
+      text-align: center;
+      margin: 4pt 0 10pt;
+    }
+
+    .tex-entry-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12pt;
+      margin-top: 8pt;
+    }
+
+    .tex-entry-left {
+      font-weight: 600;
+      color: #0d0c1a;
+    }
+
+    .tex-entry-right {
+      color: #3d3a56;
+      white-space: nowrap;
+    }
+
+    .tex-entry-sub {
+      margin-top: 2pt;
+      margin-bottom: 5pt;
+      color: #4a4766;
+      font-style: italic;
     }
 
     /* ── Tables ────────────────────────────────────────────────── */

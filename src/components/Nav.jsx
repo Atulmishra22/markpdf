@@ -15,18 +15,18 @@ export default function Nav() {
             <rect x="5" y="16" width="16" height="1.5" rx="0.75" fill="var(--text-secondary)" />
             <rect x="5" y="20" width="10" height="1.5" rx="0.75" fill="var(--text-tertiary)" />
           </svg>
-          <span className={styles.logoText}>MarkPDF</span>
+          <span className={styles.logoText}>Mark2PDF</span>
         </a>
 
         <div className={styles.links}>
           <a href="#features" className={styles.link}>Features</a>
           <a href="#demo" className={styles.link}>Demo</a>
-          <a href="#" className={styles.link}>Pricing</a>
-          <a href="#" className={styles.link}>Docs</a>
+          <a href="#" className={styles.link}>How it works</a>
+          <a href="#" className={styles.link}>About</a>
         </div>
 
         <a href="#" className={`btn-primary ${styles.cta}`}>
-          Try Free
+          Convert Now
         </a>
       </div>
     </nav>

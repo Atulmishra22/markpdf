@@ -17,7 +17,7 @@ export default function Hero() {
 
       <div className={`container ${styles.content}`}>
         <div ref={ref} className={`reveal ${styles.inner}`}>
-          <span className="micro-label">// markdown → pdf</span>
+          <span className="micro-label">// mark2pdf</span>
 
           <h1 className={styles.headline}>
             Write free.<br />
@@ -25,8 +25,8 @@ export default function Hero() {
           </h1>
 
           <p className={styles.sub}>
-            Convert Markdown to beautifully typeset PDFs in under a second.
-            Zero config. Any template. Every platform.
+            Convert content into clean, professional PDFs in under a second.
+            Zero setup. Smooth workflow. Every platform.
           </p>
 
           <div className={styles.actions}>

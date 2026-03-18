@@ -4,29 +4,42 @@ Convert Markdown to beautifully typeset PDFs instantly — zero configuration re
 
 ## Overview
 
-MarkPDF is a full-stack application with a React landing page and a Node.js/Express API that converts Markdown to PDF using Puppeteer (headless Chrome). It is 100% CommonMark spec-compliant and supports tables, footnotes, math, and code blocks.
+Convert Markdown and TeX to beautifully typeset PDFs instantly — zero configuration required.
 
 ## Tech Stack
 
-| Layer | Technology |
+It is CommonMark-compliant for Markdown and also supports lightweight TeX-to-PDF conversion without installing a TeX distribution.
 |---|---|
-| Frontend | React 19, Vite 7, CSS Modules |
+Converts Markdown or TeX to a PDF file.
 | Backend | Node.js, Express 5 |
 | PDF Engine | Puppeteer 24 (headless Chrome) |
 | Markdown Parser | Marked 17 |
 | Security | Helmet, express-rate-limit, sanitize-html |
 
-## Getting Started
+  "format": "markdown",
+  "content": "# Hello World\n\nYour content here.",
 
 ### Prerequisites
 
 - Node.js 18+
 - npm
 
+Legacy markdown payloads are still supported:
+
+```json
+{
+  "markdown": "# Hello World"
+}
+```
+
 ### Install
 
-```bash
+| `format` | string | No | `markdown` (default) or `tex` |
+| `content` | string | Preferred | Non-empty, max 512 KB |
+| `markdown` / `tex` | string | Optional | Backward-compat fields matched by `format` |
 # Install frontend dependencies
+
+TeX mode intentionally supports a practical subset (`section`, `subsection`, `itemize`, `enumerate`, inline formatting, and math blocks) and does not require `pdflatex` or external system binaries.
 npm install
 
 # Install backend dependencies

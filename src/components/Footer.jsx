@@ -18,30 +18,30 @@ export default function Footer() {
         <div className={styles.brand}>
           <a href="#" className={styles.logo}>
             <LogoMark />
-            <span className={styles.logoText}>MarkPDF</span>
+            <span className={styles.logoText}>Mark2PDF</span>
           </a>
           <p className={styles.tagline}>
-            Markdown rendered<br />with precision.
+            Fast PDF generation,<br />built for real work.
           </p>
         </div>
 
         <div className={styles.links}>
           <div className={styles.col}>
-            <span className={styles.colHead}>Product</span>
+            <span className={styles.colHead}>Platform</span>
             <a href="#">Features</a>
-            <a href="#">Pricing</a>
-            <a href="#">Changelog</a>
-            <a href="#">Roadmap</a>
+            <a href="#demo">Live Demo</a>
+            <a href="#">API</a>
+            <a href="#">Status</a>
           </div>
           <div className={styles.col}>
-            <span className={styles.colHead}>Developers</span>
-            <a href="#">Documentation</a>
-            <a href="#">API Reference</a>
-            <a href="#">CLI Guide</a>
+            <span className={styles.colHead}>Resources</span>
+            <a href="#">Guide</a>
+            <a href="#">Examples</a>
+            <a href="#">Support</a>
             <a href="#">GitHub</a>
           </div>
           <div className={styles.col}>
-            <span className={styles.colHead}>Company</span>
+            <span className={styles.colHead}>About</span>
             <a href="#">About</a>
             <a href="#">Blog</a>
             <a href="#">Privacy</a>
@@ -52,7 +52,7 @@ export default function Footer() {
       </div>
 
       <div className={`container ${styles.bottom}`}>
-        <span className={styles.copy}>© 2026 MarkPDF. Built with precision.</span>
+        <span className={styles.copy}>© 2026 Mark2PDF. Built with precision.</span>
         <span className={styles.copy}>Made for developers, by developers.</span>
       </div>
     </footer>

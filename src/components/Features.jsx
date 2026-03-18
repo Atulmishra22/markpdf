@@ -15,7 +15,7 @@ const features = [
     ),
     label: '// simplicity',
     title: 'Zero Config, Always',
-    body: 'Drop in your Markdown. Get a PDF. No YAML front-matter required, no template wrestling. Sensible defaults that produce beautiful output every single time.',
+    body: 'Drop in your content. Get a PDF. No template wrestling, no fragile export settings, no hidden configuration walls.',
   },
   {
     icon: (
@@ -37,8 +37,8 @@ const features = [
       </svg>
     ),
     label: '// reliability',
-    title: 'Spec-Compliant Output',
-    body: '100% CommonMark spec compliance. Tables, footnotes, math, code blocks — every element renders exactly as specified, precisely reproducible across every run.',
+    title: 'Consistent Output',
+    body: 'Designed for repeatable, deterministic rendering so your PDFs look the same every time across machines and environments.',
   },
 ]
 

@@ -18,22 +18,22 @@ export default function CTA() {
 
           <h2 className={styles.title}>
             Every great document<br />
-            <em>starts as Markdown.</em>
+            <em>deserves a better PDF.</em>
           </h2>
 
           <p className={styles.sub}>
-            Join over 50,000 developers and writers who replaced broken export
-            pipelines with one reliable, beautiful tool.
+            Build polished PDFs without wrestling with export settings,
+            templates, or inconsistent rendering.
           </p>
 
           <div className={styles.actions}>
             <a href="#" className="btn-primary">
-              Get Started Free
+              Start Converting
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </a>
-            <a href="#" className="btn-ghost">Read the Docs</a>
+            <a href="#demo" className="btn-ghost">Jump to Demo</a>
           </div>
         </div>
       </div>

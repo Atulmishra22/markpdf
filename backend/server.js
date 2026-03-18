@@ -13,22 +13,37 @@ app.use(helmet({ contentSecurityPolicy: false }))
 
 // CORS — allow only the Vite dev server and preview server
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:4173'],
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true)
+    if (/^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin)) return cb(null, true)
+    cb(new Error('Not allowed by CORS'))
+  },
   methods: ['GET', 'POST'],
 }))
 
 // JSON body — hard cap at 512 KB to prevent oversized payloads
 app.use(express.json({ limit: '512kb' }))
 
-// Rate limiting — 30 conversions per minute per IP
-const limiter = rateLimit({
+// Convert rate limit — protect PDF generation endpoint.
+const convertLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 30,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests — please wait a moment.' },
 })
-app.use('/api', limiter)
+
+// Preview rate limit — higher threshold because preview updates while typing.
+const previewLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 240,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Preview rate limit reached — pause typing for a moment.' },
+})
+
+app.use('/api/convert', convertLimiter)
+app.use('/api/preview', previewLimiter)
 
 app.use('/api', convertRouter)
 

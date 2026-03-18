@@ -11,7 +11,7 @@ export default function Testimonial() {
           <span className="micro-label">// what they say</span>
 
           <blockquote className={styles.quote}>
-            MarkPDF replaced our entire documentation pipeline overnight. We had been
+            Mark2PDF replaced our entire documentation pipeline overnight. We had been
             fighting with LaTeX for years — this just works. The output quality is
             indistinguishable from documents we painstakingly handcrafted.
           </blockquote>

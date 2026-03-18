@@ -1,8 +1,8 @@
-import { useState, useActionState } from 'react'
+import { useState, useEffect, useActionState } from 'react'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import styles from './Demo.module.css'
 
-const API = 'http://localhost:3001/api'
+const API = (import.meta.env.VITE_API_BASE || 'http://localhost:3001/api').replace(/\/$/, '')
 
 const DEFAULT_MARKDOWN = `# API Reference
 
@@ -12,12 +12,12 @@ All requests must include an **Authorization** header with your API key.
 
 \`\`\`bash
 curl -H "Authorization: Bearer YOUR_KEY" \\
-  https://api.markpdf.dev/convert
+  https://api.mark2pdf.dev/convert
 \`\`\`
 
 ## Convert Endpoint
 
-Send a \`POST\` request with your *markdown content*:
+Send a \`POST\` request with your content:
 
 - Supports full CommonMark spec
 - Tables, code blocks, math
@@ -29,128 +29,66 @@ Send a \`POST\` request with your *markdown content*:
 | Code | Meaning |
 | ---- | ------- |
 | 200  | Success |
-| 400  | Invalid markdown |
+| 400  | Invalid input |
 | 429  | Rate limited |
 `
 
-function escapeHtml(str) {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-}
+const DEFAULT_TEX = `\\section{API Reference}
 
-function inlineFormat(text) {
-  const safe = escapeHtml(text)
-  return safe
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-}
+\\subsection{Authentication}
+All requests must include a \\textbf{Bearer token}.
 
-function parseMarkdown(md) {
-  const lines = md.split('\n')
-  let html = ''
-  let inFence = false
-  let fenceBuffer = ''
-  let inTable = false
-  let tableRows = []
+\\subsection{Convert Endpoint}
+Send a POST request with your TeX content:
 
-  const flushTable = () => {
-    if (!tableRows.length) return
-    let t = '<table>'
-    tableRows.forEach((row, idx) => {
-      const cells = row.split('|').map(c => c.trim()).filter(Boolean)
-      if (idx === 0) {
-        t += '<thead><tr>' + cells.map(c => `<th>${inlineFormat(c)}</th>`).join('') + '</tr></thead><tbody>'
-      } else if (idx === 1) {
-        // skip separator row
-      } else {
-        t += '<tr>' + cells.map(c => `<td>${inlineFormat(c)}</td>`).join('') + '</tr>'
-      }
-    })
-    t += '</tbody></table>'
-    html += t
-    tableRows = []
-    inTable = false
-  }
+\\begin{itemize}
+  \\item Supports core sectioning commands
+  \\item Supports itemize and enumerate lists
+  \\item Preserves inline math like $E=mc^2$
+\\end{itemize}
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-
-    // Fenced code blocks
-    if (line.startsWith('```')) {
-      if (!inFence) {
-        inFence = true
-        fenceBuffer = ''
-      } else {
-        html += `<pre><code>${escapeHtml(fenceBuffer)}</code></pre>`
-        inFence = false
-        fenceBuffer = ''
-      }
-      continue
-    }
-    if (inFence) {
-      fenceBuffer += line + '\n'
-      continue
-    }
-
-    // Table rows
-    if (line.trim().startsWith('|')) {
-      inTable = true
-      tableRows.push(line)
-      continue
-    } else if (inTable) {
-      flushTable()
-    }
-
-    const trimmed = line.trim()
-
-    if (!trimmed) {
-      html += '<div class="spacer"></div>'
-      continue
-    }
-
-    if (trimmed.startsWith('### ')) {
-      html += `<h3>${inlineFormat(trimmed.slice(4))}</h3>`
-    } else if (trimmed.startsWith('## ')) {
-      html += `<h2>${inlineFormat(trimmed.slice(3))}</h2>`
-    } else if (trimmed.startsWith('# ')) {
-      html += `<h1>${inlineFormat(trimmed.slice(2))}</h1>`
-    } else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
-      html += `<li>${inlineFormat(trimmed.slice(2))}</li>`
-    } else {
-      html += `<p>${inlineFormat(trimmed)}</p>`
-    }
-  }
-
-  if (inTable) flushTable()
-
-  return html
-}
+\\subsection{Response}
+The API returns a binary PDF stream.
+`
 
 export default function Demo() {
-  const [markdown, setMarkdown] = useState(DEFAULT_MARKDOWN)
+  const [format, setFormat] = useState('markdown')
+  const [source, setSource] = useState(DEFAULT_MARKDOWN)
+  const [previewHtml, setPreviewHtml] = useState('')
+  const [previewError, setPreviewError] = useState(null)
+  const [previewLoading, setPreviewLoading] = useState(false)
   const titleRef  = useScrollReveal()
   const widgetRef = useScrollReveal()
 
-  const handleChange = (e) => setMarkdown(e.target.value)
+  const handleChange = (e) => setSource(e.target.value)
+
+  const handleFormatChange = (nextFormat) => {
+    setFormat(nextFormat)
+    setSource(nextFormat === 'tex' ? DEFAULT_TEX : DEFAULT_MARKDOWN)
+  }
 
   const [error, handleDownload, loading] = useActionState(async () => {
     try {
       const res = await fetch(`${API}/convert`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ markdown, options: { title: 'document' } }),
+        body: JSON.stringify({
+          format,
+          content: source,
+          options: { title: format === 'tex' ? 'document-tex' : 'document' },
+        }),
       })
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
-        return body.error || `Server error ${res.status}`
+        return body.error || (res.status >= 500
+          ? 'Backend unavailable. Start backend server on port 3001.'
+          : `Server error ${res.status}`)
       }
       const blob = await res.blob()
       const url  = URL.createObjectURL(blob)
       const a    = Object.assign(document.createElement('a'), {
-        href: url, download: 'document.pdf',
+        href: url,
+        download: format === 'tex' ? 'document-tex.pdf' : 'document.pdf',
       })
       document.body.appendChild(a)
       a.click()
@@ -158,11 +96,54 @@ export default function Demo() {
       URL.revokeObjectURL(url)
       return null
     } catch (e) {
-      return e.message
+      return 'Cannot reach backend. Start backend server on port 3001.'
     }
   }, null)
 
-  const htmlOutput = parseMarkdown(markdown)
+  useEffect(() => {
+    if (!source.trim()) {
+      setPreviewHtml('<p>Start typing to preview your PDF.</p>')
+      setPreviewError(null)
+      setPreviewLoading(false)
+      return
+    }
+
+    const controller = new AbortController()
+    const timer = setTimeout(async () => {
+      setPreviewLoading(true)
+      try {
+        const res = await fetch(`${API}/preview`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ format, content: source }),
+          signal: controller.signal,
+        })
+
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}))
+          setPreviewError(body.error || (res.status >= 500
+            ? 'Backend unavailable. Start backend server on port 3001.'
+            : `Preview error ${res.status}`))
+          return
+        }
+
+        const body = await res.json()
+        setPreviewHtml(typeof body.html === 'string' ? body.html : '')
+        setPreviewError(null)
+      } catch (e) {
+        if (e.name !== 'AbortError') {
+          setPreviewError('Cannot reach backend. Start backend server on port 3001.')
+        }
+      } finally {
+        setPreviewLoading(false)
+      }
+    }, 220)
+
+    return () => {
+      clearTimeout(timer)
+      controller.abort()
+    }
+  }, [format, source])
 
   return (
     <section id="demo" className={styles.section}>
@@ -174,15 +155,36 @@ export default function Demo() {
             <em>In real time.</em>
           </h2>
           <p className={styles.sub}>
-            Type Markdown on the left. Download a real, beautifully typeset PDF on the right.
+            Choose your input mode and download a clean, beautifully typeset PDF.
           </p>
+        </div>
+
+        <div className={styles.modeSwitch} role="tablist" aria-label="Input format">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={format === 'markdown'}
+            className={`${styles.modeBtn} ${format === 'markdown' ? styles.activeMode : ''}`}
+            onClick={() => handleFormatChange('markdown')}
+          >
+            Markdown
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={format === 'tex'}
+            className={`${styles.modeBtn} ${format === 'tex' ? styles.activeMode : ''}`}
+            onClick={() => handleFormatChange('tex')}
+          >
+            TeX
+          </button>
         </div>
 
         <div ref={widgetRef} className={`reveal ${styles.widget}`}>
           {/* Input pane */}
           <div className={styles.pane}>
             <div className={styles.paneHeader}>
-              <span className={styles.paneLabel}>input.md</span>
+              <span className={styles.paneLabel}>{format === 'tex' ? 'input.tex' : 'input.md'}</span>
               <div className={styles.trafficLights} aria-hidden="true">
                 <span />
                 <span />
@@ -191,10 +193,10 @@ export default function Demo() {
             </div>
             <textarea
               className={styles.editor}
-              value={markdown}
+              value={source}
               onChange={handleChange}
               spellCheck={false}
-              aria-label="Markdown input editor"
+              aria-label={format === 'tex' ? 'TeX input editor' : 'Markdown input editor'}
             />
           </div>
 
@@ -202,16 +204,17 @@ export default function Demo() {
           <div className={styles.pane}>
             <div className={styles.paneHeader}>
               <span className={styles.paneLabel}>output.pdf</span>
-              <span className={styles.badge}>LIVE</span>
+              <span className={styles.badge}>{previewLoading ? 'RENDERING' : 'LIVE'}</span>
             </div>
             <div className={styles.pdfWrapper}>
               <div
                 className={styles.pdfPage}
-                dangerouslySetInnerHTML={{ __html: htmlOutput }}
+                dangerouslySetInnerHTML={{ __html: previewHtml }}
               />
             </div>
             {/* Download bar */}
             <div className={styles.downloadBar}>
+              {previewError && <span className={styles.errorMsg}>⚠ {previewError}</span>}
               {error && <span className={styles.errorMsg}>⚠ {error}</span>}
               <button
                 className={`${styles.downloadBtn} ${loading ? styles.loading : ''}`}
